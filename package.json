@@ -1,0 +1,9 @@
+{
+  "name": "tmd-editor",
+  "version": "0.0.0",
+  "description": "TMdEditor",
+  "main": "server.js",
+  "author": {
+    "name": "Tinghui Wang"
+  }
+}
