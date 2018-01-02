@@ -1,0 +1,571 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>T-Markdown-Editor Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css" integrity="sha384-exe4Ak6B0EoJI0ogGxjJ8rn+RN3ftPnEQrGwX59KTCl5ybGzvHGKjhPKk/KC3abb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/css/mdb.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.css" />
+    <link rel="stylesheet" href="css/codemirror-github-light-theme.css" />
+    <style type="text/css">
+        /* The following are styles of the webpage */
+        html, body {
+            padding: 0;
+            margin: 0;
+            background-color: #dee2e6;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 400px;
+        }
+
+        .navbar-dark a.navbar-brand {
+            color: white;
+        }
+
+        .carousel {
+            height: 50vh;
+            min-height: 300px;
+        }
+
+        .homepage-carousel-light .full-bg-img {
+            background: rgba(220, 20, 60, 0.64) !important;
+            background: linear-gradient(45deg, rgba(237, 54, 91, 0.45) 0%, rgba(127, 12, 35, 0.88) 100%) !important;
+            background: -moz-linear-gradient(135deg, rgba(237, 54, 91, 0.45) 0%, rgba(127, 12, 35, 0.88) 100%) !important;
+            background: -webkit-linear-gradient(135deg, rgba(237, 54, 91, 0.45) 0%, rgba(127, 12, 35, 0.88) 100%) !important;
+        }
+
+        .carousel-item {
+            height: 100%;
+        }
+
+        .carousel-inner {
+            height: 100%;
+        }
+
+        .main-raised {
+            margin: -60px 30px 0px;
+            border-radius: 0.4rem;
+        }
+
+        .main {
+            background: linear-gradient(180deg, #fff 0%, #dee2e6 100%) !important;
+            background: -moz-linear-gradient(270deg, #fff 0%, #dee2e6 100%) !important;
+            background: -webkit-linear-gradient(270deg, #fff 0%, #dee2e6 100%) !important;
+            position: relative;
+            padding-bottom: 50px;
+        }
+
+        .top-nav-collapse {
+            background-color: #ad102f;
+        }
+
+        .scrolling-navbar {
+            -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
+            -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
+            transition: background .5s ease-in-out, padding .5s ease-in-out;
+        }
+
+        .initial-wrapper {
+            margin: 10px;
+            background: white;
+        }
+
+        /* The following are styles related to the T-Markdown editor. */
+
+        /* Editor toolbar style */
+        .tmd-editor-toolbar {
+            position: relative;
+            display: inline-flex;
+            width: 100%;
+            border-bottom: 1px solid #d9d9d9;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            z-index: 99;
+        }
+
+            .tmd-editor-toolbar i.tmd-separator {
+                width: 0;
+                border-left: 1px solid #d9d9d9;
+                border-right: 1px solid #fff;
+                color: transparent;
+                text-indent: -10px;
+                margin: 0 6px;
+            }
+
+        .tmd-toolbar-btn {
+            padding: 0 !important;
+            margin: 5px 2px !important;
+            box-shadow: none !important;
+            /*border: 1px solid #efefef !important;*/
+            width: 30px;
+            height: 30px;
+        }
+
+            .tmd-toolbar-btn.btn-white:hover {
+                background-color: #efefef !important;
+            }
+
+            .modal-dialog .tmd-toolbar-btn.btn-white i.fa,
+            .tmd-toolbar-btn.btn-white i {
+                color: black !important;
+            }
+
+            .tmd-toolbar-btn i.tmd-superscript-up,
+            .tmd-toolbar-btn i.tmd-superscript-down {
+                font-size: 0.8rem;
+            }
+
+                .tmd-toolbar-btn i.tmd-superscript-up:after,
+                .tmd-toolbar-btn i.tmd-superscript-down:after {
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    color: red;
+                    transform: translate(70%, -50%);
+                    font-size: 0.5rem;
+                }
+
+                .tmd-toolbar-btn i.tmd-superscript-up:after {
+                    content: "\25b2";
+                }
+
+                .tmd-toolbar-btn i.tmd-superscript-down:after {
+                    content: "\25bc";
+                }
+
+        /* Styles for adjusting text size in the editor. */
+        .cm-s-github-light .CodeMirror-lines,
+        .cm-s-github-light.CodeMirror pre {
+            font-size: 1em;
+        }
+
+        .CodeMirror {
+            position: absolute !important;
+            height: unset !important;
+            top: 45px;
+            bottom: 40px;
+            left: 0px;
+            right: 50%;
+        }
+
+        /* Preview window */
+        .tmd-preview {
+            position: absolute !important;
+            padding: 15px;
+            top: 45px;
+            bottom: 40px;
+            right: 0px;
+            height: unset;
+            width: 50%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        /* Full Screen Mode */
+        .tmd-editor-modal .modal-dialog .modal-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .tmd-editor-modal .modal-dialog {
+            max-width: unset;
+            margin: 10px;
+            height: calc(100vh - 20px);
+        }
+
+        /* Editor and Border */
+        .tmd-editor-wrapper {
+            position: relative;
+        }
+
+        .tmd-editor-border {
+            resize: vertical;
+            min-height: 300px;
+            max-height: 100vh;
+            height: 80vh;
+            border: 1px solid #efefef;
+            overflow: auto;
+            position: relative;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar fixed-top navbar-expand-md navbar-dark  navbar-transparent scrolling-navbar ">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <strong>T-Markdown Editor</strong>
+            </a>
+        </div>
+    </nav>
+    <div class="wrapper">
+        <div id="homepage-carousel" class="carousel slide carousel-fade white-text" data-ride="carousel" data-interval="false">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#homepage-carousel" data-slide-to="0" class="active"></li>
+            </ol>
+            <!-- Slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active view homepage-carousel-light" style="background-repeat: no-repeat; background-size: cover;">
+                    <div class="full-bg-img flex-center white-text">
+                        <ul class="animated fadeIn col-md-12">
+                            <li>
+                                <h1 class="h1-responsive">T-Markdown Editor</h1>
+                            </li>
+                            <li>
+                                <p>Open-source Online Markdown Editor</p>
+                            </li>
+                            <li>
+                                <a href="https://github.com/TinghuiWang/T-Markdown-Editor" class="btn btn-transparent btn-lg waves-effect waves-light" rel="nofollow">
+                                    <i class="fa fa-github"></i>
+                                    Browse on Github
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main main-raised">
+            <article class="container">
+                <div class="divider-new pt-5">
+                    <h2 class="h2-responsive wow fadeIn" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s;">
+                        T-Markdown Editor: Example
+                    </h2>
+                </div>
+                <div class="initial-wrapper">
+                    <textarea data-provide="markdown">
+# T-Markdown Editor
+
+TMdEditor is a javascript markdown editor designed to be used in webpages to
+render textarea for easy editing.
+The project started with the source code of [SimpleMDE](https://simplemde.com/).
+A few improvements have been made so that I would like to share the source codes
+under a new name.
+
+## Contents
+
+[[toc]]
+
+## Column-based Layout
+
+The editor takes advantage of Bootstrap Grid system to create column-based layout in text editing.
+Each row is composed of 12 columns. 
+The following example provides a layout of 8 columns on the left and 4 columns on the right.
+Depending on the size of the view port, it will be re-organize itself.
+On thow that works, please refer to grid system documentation at [Bootstrap v4](http://getbootstrap.com) website.
+
+:::: row
+::: col lg-8 md-6 sm-12
+#### Left Column
+
+With more than 600mA current drawing from USB port, ==VBUS5V0== line (in yellow) drops below 4V for 3.4ms, as shown in Figure 1, causing ==3.3V== rail cutting off.
+
+You can also include other blocks here.
+```c
+int main(int argc, char** argv) {
+    return -1;
+}
+```
+:::
+::: col lg-4 md-6 sm-12
+#### Right Column.
+
+![Figure 1. USB 5V rail (in yellow) and 3.3V power rail waveform at the time when power failure occurs.](assets/oscillascope.JPG)
+:::
+::::
+
+## Heading
+
+H1-H6 provided below corresponding to the HTML tags `<h1>` to `<h6>`.
+
+# Header Level 1
+## Header Level 2
+### Header Level 3
+#### Header Level 4
+##### Header Level 5
+###### Header Level 6
+
+---
+You can use the following style if you wan tto match the styling of heading but not use the associated HTML element.
+
+Header Level 1 {.h1}
+
+Header Level 2 {.h2}
+
+Header Level 3 {.h3}
+
+Header Level 4 {.h4}
+
+Header Level 5 {.h5}
+
+Header Level 6 {.h6}
+
+----
+
+## Paragraph and inline texts
+
+This is a regular paragraph.
+Paragraph can extend to multiple lines.
+
+This paragraph stands out. {.lead}
+
+**Bold**  
+****Extra Bold****  
+*Italic*  
+***Bold Italic***  
+*****Extra Bold Italic*****  
+~~strike through texts~~  
+==mark==  
+Inline codes: `$ source /opt/Xilinx/Vivado/2017.4/settings64.sh`
+
+### Typographer
+(c) (C) (r) (R) (tm) (TM) (p) (P) +-  
+"Smartypants, double quotes" and 'single quotes'
+
+----
+
+## Lists
+
+Number Lists
+
+1. First Item
+2. Second Item
+3. Third Item
+
+Unordered Lists
+
+- Item 1
+  - Nested 1.1
+  - Nested 1.2
+- Item 2
+  - Nested 2.1
+  - Nested 2.2
+
+----
+
+## Table
+
+Simple Table
+
+| Col 1 | Col 2   |
+|=======|=========|
+|Table Content 1| Table Content 2|
+{.table .table-striped .table-bordered}
+
+Table in multi-markdown format
+
+|             |          Grouping           ||
+First Header  | Second Header | Third Header |
+ ------------ | :-----------: | -----------: |
+Content       |          *Long Cell*        ||
+Content       |   **Cell**    |         Cell |
+New section   |     More      |         Data |
+And more      | With an escaped '\|'         ||
+[Prototype table]
+{.table .table-striped .table-bordered}
+
+----
+
+## Block Quotes and Notification Boxes
+ 
+Standard Block quotes
+> There is a time in every man's education when he arrives at the conviction that envy is ignorance; 
+> that imitation is suicide; that he must take himself for better, for worse, as his portion; 
+> that though the wide universe is full of good, no kernel of nourishing corn can come to him 
+> but through his toil bestowed on that plot of ground which is given to him to till. 
+> The power which resides in him is new in nature, and none but he knows what that is which he can do, 
+> nor does he know until he has tried.
+> 
+> -- <cite>Emmerson</cite>
+
+Block quotes can also be extended to notification boxes with attributes tags
+
+> #### Notification - Primary {.bq-title}
+> Some details
+> {.bq-primary}
+
+> #### Notification Success {.bq-title}
+> Some details
+> {.bq-success}
+
+> #### Notification Warning {.bq-title}
+> Some details
+> {.bq-warning}
+
+> #### Danger {.bq-title}
+> Some details
+> {.bq-danger}
+
+----
+
+## Code Highlight
+
+Here are a few examples
+
+### Verilog HDL
+
+```verilog
+`timescale 1ns / 1ps
+
+    module project1_demo(
+        input clk,
+        output [15:0] led,
+        output [7:0] seg,
+        output [3:0] an
+    );
+
+    reg [23:0] counter = 24'd0;
+    reg divclk = 1'b0;
+
+    /* Clock Divider: 100MHz -> 10Hz (100ms) */
+    always @(posedge clk)
+    begin
+        if (counter == 24'd4999999) begin
+            divclk <= ~divclk;
+            counter <= 24'd0;
+        end
+        else begin
+            divclk <= divclk;
+            counter <= counter + 1'd1;
+        end
+    end
+
+    assign led = led_reg;
+    assign an = 4'h0;
+    assign seg = seg_reg;
+
+    endmodule
+```
+
+### TCL Code (constraints file)
+
+```tcl
+# Clock signal
+#Bank = 34, Sch name = CLK100MHZ
+set_property PACKAGE_PIN W5 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports clk]
+create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
+```
+
+### C Code
+```c
+#include "xparameters.h"
+#include "xil_types.h"
+
+// Macro that stores the base address of your controller
+#define LED_BASEADDR XPAR_MYLED_0_S_AXI_BASEADDR
+
+int main() {
+
+    // Declare volatile integer i
+    volatile int i = 0;
+
+    // Turn off all LEDs
+    *((u32 *) LED_BASEADDR) = 0x00;
+
+    // Infinite loop
+    while (1) {
+
+        // Flip LED Status
+        *((u32 *) LED_BASEADDR) = ~ *((u32 *) LED_BASEADDR);
+
+        // Delay Function
+        for (i = 0; i < 10000000; i++);
+    }
+    return 1;
+}
+```
+
+### ARM Assembly
+
+```arm
+push {r4, r5, r6, lr}
+movw r1, #16383 ; 0x3fff
+mov r3, #0
+mov r2, #32
+mov r6, #40
+str r1, [r0, #12]
+pop {r4, r5, r6, pc}
+```
+
+----
+
+## Images
+
+![Figure 2. Inline Image.](assets/oscillascope.JPG)
+
+![Figure 3. Float Right.](assets/DSC03298.jpg) {.pull-right}
+
+----
+## Mathematics
+
+Mathematics is supported in Latex style
+
+$$E=mc^2$$
+
+Inline Mathmatic: $E=mc^2$
+
+$$x > y$$
+
+$$(\sqrt{3x-1}+(1+x)^2)$$
+                    
+$$\sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f))$$
+
+Multiline Mathematic Equations:
+
+$$
+\displaystyle
+\left( \sum_{k=1}^n a_k b_k \right)^2
+\leq
+\left( \sum_{k=1}^n a_k^2 \right)
+\left( \sum_{k=1}^n b_k^2 \right)
+$$
+
+$$
+\displaystyle 
+    \frac{1}{
+        \Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{
+        \frac25 \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {
+        1+\frac{e^{-6\pi}}
+        {1+\frac{e^{-8\pi}}
+         {1+\cdots} }
+        } 
+    }
+$$
+
+$$
+f(x) = \int_{-\infty}^\infty
+    \hat f(\xi)\,e^{2 \pi i \xi x}
+    \,d\xi
+$$
+                    </textarea>
+                </div>
+            </article>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/popper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/js/mdb.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/addon/edit/continuelist.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/addon/mode/overlay.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/gfm/gfm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/markdown/markdown.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="dist/tmd-editor.js"></script>
+    <script>
+        $('textarea[data-provide=\'markdown\']').tMdEditor_Init();
+    </script>
+</body>
+</html>
