@@ -11,7 +11,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>94171c11-64f5-42ef-b371-807591ef145f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>server.js</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,9 +29,30 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="server.js" />
+    <Content Include="assets\oscillascope.JPG" />
+    <Content Include="css\codemirror-github-light-theme.css" />
+    <Content Include="index.html" />
+    <Content Include="LICENSE" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\" />
+    <Folder Include="css\" />
+    <Folder Include="src\" />
+    <Folder Include="src\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\js\editor.js" />
+    <Compile Include="src\js\markdown-it-source-map.js" />
+    <Compile Include="src\js\tmd-editor.js" />
+    <Compile Include="src\js\_action.js" />
+    <Compile Include="src\js\_options.js" />
+    <Compile Include="src\js\_platform.js" />
+    <Compile Include="src\js\_preview.js" />
+    <Compile Include="src\js\_statusbar.js" />
+    <Compile Include="src\js\_toolbar.js" />
+    <Compile Include="webpack.config.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
